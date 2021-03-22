@@ -1,0 +1,165 @@
+﻿<Window x:Class="GosZakup.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GosZakup"
+        mc:Ignorable="d"
+		WindowStartupLocation="CenterScreen"
+        Title="GosZakupki 1.0.0.3" Height="550" Width="900" Icon="/GosZakup;component/Resources/internet.png" >
+
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Height" Value="22"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Style.Setters>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Height" Value="26"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                            Path=(Validation.Errors)[0].ErrorContent}"/>
+                    <Setter Property="Background" Value="Pink"/>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="215"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+
+        <Menu Grid.Row="0" HorizontalAlignment="Stretch" Height="20" Margin="0,1,0,0"  VerticalAlignment="Top" >
+            <MenuItem Header="Файл">
+
+                <MenuItem Header="Выход" Click="Close"  >
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/Close-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Справочники">
+                <MenuItem Header="Покупатели" Click="ConsumersDic">
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/folder.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="Парсинг" >
+                <MenuItem x:Name="M_Parser" Header="Парсинг закупок" Click="ViewParsing">
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/Parsing.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="M_Update" Header="Обновление статусов закупок" Click="Update_Status" >
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/Refresh-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Работа с базой данных" >
+                <MenuItem x:Name="M_EraserDB" Header="Очистить БД" Click="Del_Data" >
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/DelDB.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem x:Name="M_DelOver" Header="Удаление завершенных закупок" Click="DelInactiveCards">
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/Del.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="О программе" >
+                <!--<MenuItem Header="Help">
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/Help book 3d.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>-->
+                <MenuItem Header="О программе" Click="Adout"  >
+                    <MenuItem.Icon>
+                        <Image Source="/GosZakup;component/Resources/internet.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <DataGrid x:Name="MainTabl" AutoGenerateColumns="False"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" LoadingRow="dGrid_LoadingRow"  Grid.Row="1" >
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="DataGridRow" >
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                </Style>
+            </DataGrid.ItemContainerStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding num_purhchase}"		                        Header="Номер аукциона"		Width="105"/>
+                <DataGridTextColumn Binding="{Binding start_date, StringFormat=dd:MM:yyyy}"			Header="Дата"				Width="70" />
+                <DataGridTextColumn Binding="{Binding name_of_purchase}"                            Header="Предмет закупки"	Width="*"/>
+                <DataGridTextColumn Binding="{Binding cost}" 			                            Header="Стоимость"			Width="70"/>
+                <DataGridTextColumn Binding="{Binding name}"				                        Header="Покупатель"			Width="*"/>
+                <DataGridTextColumn Binding="{Binding unp}"					                        Header="УНП"				Width="70"/>
+                <DataGridTextColumn Binding="{Binding contact}"				                        Header="Контактные данные"	Width="*"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Height="30" Margin="0,0,0,0" VerticalAlignment="Top" >
+            <TextBlock x:Name="online_status1" Width="168"/>
+            <TextBlock x:Name="online_status2" Width="231"/>
+            <ProgressBar x:Name="PB_Update" Height="28" Width="455" IsIndeterminate="False"/>
+        </StatusBar>
+
+        <!--ПОИСК-->
+
+        <Label Content="Покупатель"             Margin="27,42,0,0"      Width="74"/>
+        <Label Content="УНП покупателя"         Margin="27,73,0,0"      Width="99"/>
+        <Label Content="Предмет закупки"        Margin="27,133,0,0"     Width="104"/>
+        <Label Content="Вид процедуры закупки"  Margin="27,104,0,0"     Width="143"/>
+        <Label Content="Стоимость закупки с "   Margin="27,166,0,0"     Width="127"/>
+        <Label Content="по"                     Margin="257,166,0,0"    Width="24"/>
+        <Label Content="Номер закупки"          Margin="477,73,0,0"     Width="99"/>
+        <Label Content="Дата проведения"		Margin="385,166,0,0"    Width="106"/>
+        <Label Content="по"                     Margin="596,166,0,0"    Width="24"/>
+        <Label Content="Статус закупки"			Margin="477,104,0,0"    Width="113"/>
+
+        <TextBox x:Name="TB_Name"           Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="175,46,0,0"		ToolTip="Введите наименование покупателя. Например: Военная часть"			Width="684" />
+        <TextBox x:Name="TB_UNP"            Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="175,77,0,0"		ToolTip="Например: 100308099"												Width="297"/>
+        <TextBox x:Name="TB_NameOfPurshase" Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="175,135,0,0"	ToolTip="Введите текст для поиска по предмету закупки. Например: Бумага"	Width="550"/>
+        <TextBox x:Name="TB_PriceStart"     Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="175,167,0,0"	ToolTip="Введите начальную стоимость закупки"								Width="77"/>
+        <TextBox x:Name="TB_PriceEnd"       Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="286,167,0,0"	ToolTip="Введите предельную стоимость закупки"								Width="77"/>
+        <TextBox x:Name="TB_Num"            Text="{Binding Path=LName, ValidatesOnExceptions=True}"	    Margin="608,77,0,0"		ToolTip="Например: auc0000000001 или часть номера"											Width="251"/>
+
+        <ComboBox x:Name="CB"		ToolTip="Выберите вид процедуры закупки"	HorizontalAlignment="Left" Margin="175,104,0,0"		VerticalAlignment="Top" Width="297" Height="22" />
+        <ComboBox x:Name="Status"	ToolTip="Выберите статус закупки"		    HorizontalAlignment="Left" Margin="608,104,0,0"		VerticalAlignment="Top" Width="251" Height="22"/>
+
+        <DatePicker x:Name="DP_StartDate" ToolTip="Выберите дату начала закупки"	HorizontalAlignment="Left" Margin="496,167,0,0" VerticalAlignment="Top" />
+        <DatePicker x:Name="DP_EndDate" ToolTip="Выберите дату завершения закупки"	HorizontalAlignment="Left" Margin="625,167,0,0" VerticalAlignment="Top"  />
+
+        <Button	HorizontalAlignment="Left" Margin="759,135,0,0" VerticalAlignment="Top" Width="100" Click="BC_Serch" Height="22" ToolTip="Найти по запросу">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Поиск в БД"/>
+                <Image Source="/GosZakup;component/Resources/search-icon.png" Margin="5,0,0,0" />
+            </StackPanel>
+        </Button>
+
+        <Button HorizontalAlignment="Left" Margin="759,167,0,0" VerticalAlignment="Top" Width="100" Height="22" Click="Bc_Clear" ToolTip="Очистить форму запроса">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Очистить"/>
+                <Image Source="/GosZakup;component/Resources/clear-icon.png" Margin="10,0,0,0" />
+            </StackPanel>
+        </Button>
+
+    </Grid>
+</Window>

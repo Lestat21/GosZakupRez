@@ -1,0 +1,26 @@
+﻿<Window x:Class="GosZakup.View.ConsumerDic"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GosZakup.View"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="ConsumerDic" Height="450" Width="800" Icon="/GosZakup;component/Resources/internet.png">
+    <Grid>
+        <DataGrid x:Name="grid_ConsumerDic" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" AutoGenerateColumns="False" IsReadOnly="True">
+
+            
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Unp}"					Header="УНП"				Width="70"/>     
+                <DataGridTextColumn Binding="{Binding Name}"				Header="Покупатель"			Width="*"/>
+                <DataGridTextColumn Binding="{Binding Adress}"				Header="Адрес"	Width="*"/>
+                <DataGridTextColumn Binding="{Binding Contact}"				Header="Контактные данные"	Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+
+
+    </Grid>
+</Window>
